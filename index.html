@@ -7,17 +7,63 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Open+Sans:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Montserrat:wght@400;600;700&display=swap');
         
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #f0f4f8;
+            font-family: 'Fredoka', sans-serif;
+            background-color: #FAF6F0; /* Ζεστό κρεμ φόντο χαρτιού */
+            background-image: radial-gradient(#e4ded5 1px, transparent 1px);
+            background-size: 24px 24px;
             scroll-behavior: smooth;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
-        h1, h2, h3 {
-            font-family: 'Montserrat', sans-serif;
+        h1, h2, h3, h4 {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Sketchy Hand-drawn Εφέ για περιγράμματα */
+        .sketch-border {
+            border: 3px solid #1F4056;
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        }
+        
+        .sketch-border-sm {
+            border: 2px solid #1F4056;
+            border-radius: 120px 10px 110px 10px/10px 110px 10px 120px;
+        }
+
+        /* 3D Χειροποίητες Σκιές */
+        .sketch-shadow-teal {
+            box-shadow: 6px 6px 0px 0px #1F4056;
+        }
+        
+        .sketch-shadow-coral {
+            box-shadow: 6px 6px 0px 0px #E77C61;
+        }
+
+        .sketch-shadow-gold {
+            box-shadow: 6px 6px 0px 0px #DFAB54;
+        }
+
+        .card-sketch {
+            background: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card-sketch:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px 0px #1F4056;
+        }
+
+        /* Watercolor splashes προσομοίωση στα άκρα */
+        .watercolor-bg-left {
+            background: radial-gradient(circle at top left, rgba(31, 64, 86, 0.15) 0%, transparent 60%);
+        }
+
+        .watercolor-bg-right {
+            background: radial-gradient(circle at bottom right, rgba(231, 124, 97, 0.15) 0%, transparent 60%);
         }
 
         .chart-container {
@@ -26,46 +72,16 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 350px;
-            max-height: 400px;
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, #2D3250 0%, #424769 100%);
-        }
-
-        .card {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .timeline-item::after {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 10px;
-            width: 16px;
-            height: 16px;
-            background: #F6B17A;
-            border-radius: 50%;
-        }
-
-        .timeline-line {
-            border-left: 2px dashed #7077A1;
+            height: 320px;
         }
 
         /* High Contrast Themes */
         .high-contrast {
             background-color: #000000 !important;
             color: #FFFF00 !important;
+            background-image: none !important;
         }
-        .high-contrast .card, 
+        .high-contrast .card-sketch, 
         .high-contrast nav, 
         .high-contrast footer, 
         .high-contrast #about, 
@@ -73,7 +89,8 @@
         .high-contrast #training {
             background-color: #121212 !important;
             color: #FFFF00 !important;
-            border: 2px solid #FFFF00 !important;
+            border: 3px solid #FFFF00 !important;
+            box-shadow: 6px 6px 0px 0px #FFFF00 !important;
         }
         .high-contrast h1, 
         .high-contrast h2, 
@@ -94,125 +111,304 @@
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="text-[#1F4056] relative watercolor-bg-left min-h-screen">
 
 <!-- Floating Accessibility Panel -->
 <div id="a11y-widget" class="fixed bottom-6 right-6 z-50">
-    <button id="a11y-toggle" onclick="toggleA11yPanel()" class="bg-[#2D3250] hover:bg-[#F6B17A] text-white hover:text-[#2D3250] p-4 rounded-full shadow-2xl focus:ring-4 focus:ring-blue-300 transition-all flex items-center justify-center" aria-label="Επιλογές Προσβασιμότητας" aria-expanded="false" aria-controls="a11y-menu">
+    <button id="a11y-toggle" onclick="toggleA11yPanel()" class="bg-[#1F4056] hover:bg-[#E77C61] text-white p-4 rounded-full shadow-2xl focus:ring-4 focus:ring-[#DFAB54] transition-all flex items-center justify-center border-2 border-white" aria-label="Επιλογές Προσβασιμότητας" aria-expanded="false" aria-controls="a11y-menu">
         <span class="text-2xl" aria-hidden="true">♿</span>
     </button>
-    <div id="a11y-menu" class="hidden absolute bottom-16 right-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 transition-all duration-300 text-slate-800" role="region" aria-label="Ρυθμίσεις Προσβασιμότητας">
-        <h3 class="font-bold text-lg mb-3 border-b pb-2 text-[#2D3250]">Εργαλεία Προσβασιμότητας</h3>
+    <div id="a11y-menu" class="hidden absolute bottom-18 right-0 w-72 bg-white rounded-2xl shadow-2xl border-4 border-[#1F4056] p-4 transition-all duration-300 text-[#1F4056]" role="region" aria-label="Ρυθμίσεις Προσβασιμότητας">
+        <h3 class="font-bold text-lg mb-3 border-b-2 border-[#1F4056] pb-2">Εργαλεία Προσβασιμότητας</h3>
         
         <!-- Text Size Settings -->
         <div class="mb-4">
             <span class="text-sm font-semibold block mb-2">Μέγεθος Κειμένου:</span>
             <div class="flex space-x-2">
-                <button onclick="changeFontSize('dec')" class="flex-1 bg-slate-100 hover:bg-slate-200 p-2 rounded text-xs font-bold focus:ring-2 focus:ring-blue-500">Α- (Σμίκρυνση)</button>
-                <button onclick="changeFontSize('reset')" class="flex-1 bg-slate-100 hover:bg-slate-200 p-2 rounded text-xs font-bold focus:ring-2 focus:ring-blue-500">Κανονικό</button>
-                <button onclick="changeFontSize('inc')" class="flex-1 bg-slate-100 hover:bg-slate-200 p-2 rounded text-xs font-bold focus:ring-2 focus:ring-blue-500">Α+ (Μεγέθυνση)</button>
+                <button onclick="changeFontSize('dec')" class="flex-1 bg-slate-100 hover:bg-slate-200 p-2 rounded text-xs font-bold border-2 border-[#1F4056]">Α-</button>
+                <button onclick="changeFontSize('reset')" class="flex-1 bg-slate-100 hover:bg-slate-200 p-2 rounded text-xs font-bold border-2 border-[#1F4056]">Normal</button>
+                <button onclick="changeFontSize('inc')" class="flex-1 bg-slate-100 hover:bg-slate-200 p-2 rounded text-xs font-bold border-2 border-[#1F4056]">Α+</button>
             </div>
         </div>
 
         <!-- High Contrast Toggle -->
         <div class="mb-4">
             <span class="text-sm font-semibold block mb-2">Θέμα / Αντίθεση:</span>
-            <button onclick="toggleHighContrast()" class="w-full bg-slate-100 hover:bg-slate-200 p-2 rounded text-sm font-semibold flex items-center justify-center space-x-2 focus:ring-2 focus:ring-blue-500">
-                <span>🌗</span> <span>Υψηλή Αντίθεση / Dark</span>
+            <button onclick="toggleHighContrast()" class="w-full bg-slate-100 hover:bg-slate-200 p-2 rounded text-sm font-semibold flex items-center justify-center space-x-2 border-2 border-[#1F4056]">
+                <span>🌗</span> <span>Υψηλή Αντίθεση</span>
             </button>
         </div>
 
         <!-- Screen Reader Optimized View -->
         <div>
             <span class="text-sm font-semibold block mb-2">Βοηθητική Προβολή:</span>
-            <button onclick="toggleScreenReaderMode()" class="w-full bg-slate-100 hover:bg-slate-200 p-2 rounded text-sm font-semibold flex items-center justify-center space-x-2 focus:ring-2 focus:ring-blue-500">
-                <span>👁️</span> <span>Προβολή Πινάκων (για Screen Readers)</span>
+            <button onclick="toggleScreenReaderMode()" class="w-full bg-slate-100 hover:bg-slate-200 p-2 rounded text-sm font-semibold flex items-center justify-center space-x-2 border-2 border-[#1F4056]">
+                <span>👁️</span> <span>Προβολή Πινάκων</span>
             </button>
         </div>
     </div>
 </div>
 
-<nav class="fixed w-full z-40 bg-white/90 backdrop-blur-sm shadow-sm px-6 py-4">
+<nav class="fixed w-full z-40 bg-[#FAF6F0]/95 backdrop-blur-sm border-b-4 border-[#1F4056] px-6 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="font-extrabold text-2xl text-[#2D3250] tracking-tighter italic">ΣΤΕΛΛΑ ΑΞΙΩΤΗ</div>
-        <div class="hidden md:flex space-x-8 text-sm font-bold text-[#7077A1] uppercase tracking-widest">
-            <a href="#about" class="hover:text-[#F6B17A] focus:ring-2 focus:ring-[#F6B17A] p-1 rounded">Ορισμος</a>
-            <a href="#data" class="hover:text-[#F6B17A] focus:ring-2 focus:ring-[#F6B17A] p-1 rounded">Στατιστικα</a>
-            <a href="#stella" class="hover:text-[#F6B17A] focus:ring-2 focus:ring-[#F6B17A] p-1 rounded">Καταρτιση</a>
-            <a href="#contact" class="hover:text-[#F6B17A] focus:ring-2 focus:ring-[#F6B17A] p-1 rounded">Επικοινωνια</a>
+        <div class="font-extrabold text-2xl tracking-tighter text-[#1F4056] flex items-center gap-2">
+            <span>🎭</span> ΣΤΕΛΛΑ ΑΞΙΩΤΗ
+        </div>
+        <div class="hidden md:flex space-x-6 text-sm font-bold uppercase tracking-wide">
+            <a href="#about" class="hover:text-[#E77C61] border-b-2 border-transparent hover:border-[#E77C61] transition-all">Ορισμος</a>
+            <a href="#visual-data" class="hover:text-[#E77C61] border-b-2 border-transparent hover:border-[#E77C61] transition-all">Στατιστικα</a>
+            <a href="#stella" class="hover:text-[#E77C61] border-b-2 border-transparent hover:border-[#E77C61] transition-all">Καταρτιση</a>
+            <a href="#contact" class="hover:text-[#E77C61] border-b-2 border-transparent hover:border-[#E77C61] transition-all">Επικοινωνια</a>
         </div>
     </div>
 </nav>
 
-<header class="hero-section text-white pt-32 pb-24 px-6">
-    <div class="max-w-5xl mx-auto text-center">
-        <div class="inline-block bg-[#F6B17A] text-[#2D3250] font-bold px-4 py-1 rounded-full mb-6 text-sm">
-            ΕΚΠΑΙΔΕΥΤΙΚΗ ΚΑΤΑΡΤΙΣΗ
+<header class="pt-32 pb-20 px-6 text-center relative overflow-hidden">
+    <div class="max-w-4xl mx-auto">
+        <!-- Χειροποίητο Banner που μοιάζει με αυτό της φωτογραφίας -->
+        <div class="inline-block bg-[#E77C61] text-white font-bold px-6 py-2 sketch-border-sm sketch-shadow-teal mb-8 rotate-[-1deg] text-base">
+            ΕΚΠΑΙΔΕΥΤΙΚΗ ΚΑΤΑΡΤΙΣΗ & ΒΙΩΜΑΤΙΚΗ ΜΑΘΗΣΗ
         </div>
-        <h1 class="text-4xl md:text-6xl font-black mb-8 leading-tight">Ο Ρόλος του Θεατρικού Παιχνιδιού στην Εξέλιξη του Παιδιού</h1>
-        <p class="text-xl text-[#7077A1] max-w-3xl mx-auto italic font-light">
-            “Όταν όλοι μαζί στοχεύουμε στο να συνυπάρχουμε όσο το δυνατόν πιο αρμονικά, να μοιραζόμαστε και να μοιράζουμε, να γελάμε και να ελπίζουμε, τότε αυτό διασπείρεται και γιγαντώνεται…”
-        </p>
+        <h1 class="text-4xl md:text-6xl font-black text-[#1F4056] mb-8 leading-tight">
+            Ο Ρόλος του Θεατρικού Παιχνιδιού στην Εξέλιξη του Παιδιού
+        </h1>
+        <div class="relative bg-white p-8 sketch-border sketch-shadow-gold max-w-3xl mx-auto rotate-[0.5deg]">
+            <span class="absolute -top-5 left-8 text-4xl">“</span>
+            <p class="text-lg md:text-xl text-[#1F4056] italic font-medium leading-relaxed">
+                Όταν όλοι μαζί στοχεύουμε στο να συνυπάρχουμε όσο το δυνατόν πιο αρμονικά, να μοιραζόμαστε και να μοιράζουμε, να γελάμε και να ελπίζουμε, τότε αυτό διασπείρεται και γιγαντώνεται… και αυτό φέρνει την εξέλιξη!
+            </p>
+            <span class="absolute -bottom-10 right-8 text-4xl">”</span>
+            <p class="text-right font-bold text-[#E77C61] mt-3">— Στέλλα Αξιώτη</p>
+        </div>
     </div>
 </header>
 
-<main class="max-w-7xl mx-auto py-16 px-6">
-    
+<main class="max-w-7xl mx-auto pb-24 px-6 relative watercolor-bg-right">
+
     <section id="about" class="mb-24">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div class="space-y-6">
-                <h2 class="text-3xl font-bold text-[#2D3250]">Τι είναι και τι δεν είναι</h2>
-                <p class="text-slate-600 leading-relaxed">
-                    Το θεατρικό παιχνίδι είναι ένα <strong>φανταστικό παιχνίδι ρόλων</strong> που υλοποιείται μέσα από βιωματικές ασκήσεις, βασισμένες στις τεχνικές του θεάτρου. Είναι πλήρως προσαρμοσμένο στην ηλικιακή ομάδα των παιδιών, επιτρέποντάς τους να εξερευνήσουν τον εαυτό τους χωρίς πίεση.
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-6">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-[#1F4056] flex items-center gap-3">
+                    <span class="text-4xl">🔍</span> Τι είναι & Τι δεν είναι
+                </h2>
+                <p class="text-lg text-slate-700 leading-relaxed">
+                    Το θεατρικό παιχνίδι, όπως ορίζεται στο έγγραφο <strong class="text-[#E77C61]">«Θεατρικο παιχνιδι»</strong>, είναι ένα <strong>φανταστικό παιχνίδι ρόλων</strong>. Υλοποιείται μέσα από βιωματικές ασκήσεις, βασισμένες στις τεχνικές του θεάτρου, και είναι απόλυτα προσαρμοσμένο στην ηλικιακή ομάδα των παιδιών.
                 </p>
-                <div class="bg-red-50 p-6 rounded-xl border-l-4 border-red-400">
-                    <p class="text-red-800 font-semibold italic">
-                        ΔΕΝ είναι η διανομή και στείρα εκμάθηση ρόλων για βεβιασμένη σκηνική έκθεση που προκαλεί άγχος.
-                    </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-emerald-50 p-6 sketch-border-sm sketch-shadow-teal">
+                        <h4 class="font-bold text-emerald-800 text-lg mb-2">🟢 Είναι:</h4>
+                        <p class="text-sm text-emerald-950">
+                            Γνωριμία, κατανόηση και αποδοχή του εαυτού μας και των γύρω μας, κοινωνικοποίηση, επαφή με τα συναισθήματά μας και ανάπτυξη συλλογικής σκέψης.
+                        </p>
+                    </div>
+                    <div class="bg-red-50 p-6 sketch-border-sm sketch-shadow-coral">
+                        <h4 class="font-bold text-red-800 text-lg mb-2">🔴 ΔΕΝ είναι:</h4>
+                        <p class="text-sm text-red-950">
+                            Η στείρα διανομή και εκμάθηση ρόλων με μοναδικό στόχο τη βεβιασμένη σκηνική έκθεση που προκαλεί άγχος στα παιδιά.
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-[#7077A1] text-white p-6 rounded-2xl flex flex-col justify-center items-center text-center">
-                    <span class="text-3xl mb-2">🎭</span>
-                    <span class="font-bold">Ενσυναίσθηση</span>
+
+            <!-- Παιδαγωγικοί Πυλώνες -->
+            <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                <div class="bg-white p-6 sketch-border-sm sketch-shadow-teal text-center hover:scale-105 transition-all">
+                    <span class="text-4xl block mb-2">🤝</span>
+                    <span class="font-extrabold text-sm text-[#1F4056]">Κοινωνικοποίηση</span>
                 </div>
-                <div class="bg-[#F6B17A] text-[#2D3250] p-6 rounded-2xl flex flex-col justify-center items-center text-center">
-                    <span class="text-3xl mb-2">💡</span>
-                    <span class="font-bold">Κριτική Σκέψη</span>
+                <div class="bg-white p-6 sketch-border-sm sketch-shadow-coral text-center hover:scale-105 transition-all rotate-[-2deg]">
+                    <span class="text-4xl block mb-2">🎨</span>
+                    <span class="font-extrabold text-sm text-[#E77C61]">Φαντασία</span>
                 </div>
-                <div class="bg-[#00ADB5] text-white p-6 rounded-2xl flex flex-col justify-center items-center text-center">
-                    <span class="text-3xl mb-2">🤝</span>
-                    <span class="font-bold">Συνεργασία</span>
+                <div class="bg-white p-6 sketch-border-sm sketch-shadow-gold text-center hover:scale-105 transition-all rotate-[2deg]">
+                    <span class="text-4xl block mb-2">💡</span>
+                    <span class="font-extrabold text-sm text-[#DFAB54]">Κριτική Σκέψη</span>
                 </div>
-                <div class="bg-[#2D3250] text-white p-6 rounded-2xl flex flex-col justify-center items-center text-center">
-                    <span class="text-3xl mb-2">🎨</span>
-                    <span class="font-bold">Φαντασία</span>
+                <div class="bg-white p-6 sketch-border-sm sketch-shadow-teal text-center hover:scale-105 transition-all">
+                    <span class="text-4xl block mb-2">❤️</span>
+                    <span class="font-extrabold text-sm text-[#1F4056]">Ενσυναίσθηση</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="data" class="mb-24 py-16 bg-slate-50 rounded-[3rem] px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-black text-[#2D3250] mb-4">Γιατί το επιλέγουν οι εκπαιδευτικοί;</h2>
-            <p class="text-slate-500 max-w-2xl mx-auto">Στατιστικά δεδομένα από την ελληνική πρωτοβάθμια εκπαίδευση αναδεικνύουν την καταλυτική επίδραση της μεθόδου.</p>
+    <!-- Ενότητα Στατιστικών με την Εικόνα του User -->
+    <section id="visual-data" class="mb-24 py-12 bg-[#F5EFE6] sketch-border sketch-shadow-teal px-6 md:px-12">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-[#1F4056] mb-4">
+                📊 Στατιστική Αποτύπωση & Οφέλη
+            </h2>
+            <p class="text-slate-700 max-w-2xl mx-auto">
+                Η χρησιμότητα του θεατρικού παιχνιδιού στην εκπαιδευτική διαδικασία επιβεβαιώνεται από τη σύγχρονη έρευνα και αποτυπώνεται στο παρακάτω διαδραστικό εικαστικό γράφημα.
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div class="card p-8">
-                <h3 class="text-xl font-bold mb-6 text-center text-[#7077A1]">Κυριότερο Όφελος για τον Μαθητή</h3>
-                <div class="chart-container">
-                    <canvas id="benefitsChart" aria-label="Κυκλικό γράφημα οφελών θεατρικού παιχνιδιού" role="img" aria-describedby="benefitsChartDesc"></canvas>
-                    <div id="benefitsChartDesc" class="sr-only">
-                        Αυτό το κυκλικό διάγραμμα δείχνει ότι το 66.5% των εκπαιδευτικών θεωρεί ως κυριότερο όφελος το Επικοινωνιακό Επίπεδο και το 20.5% τη Συναισθηματική Ανάπτυξη.
+        <!-- Διαδραστική Αναπαράσταση του Εικαστικού Γραφήματος (Interactive SVG/HTML Dashboard) -->
+        <div class="max-w-6xl mx-auto mb-16">
+            <div class="bg-[#FAF6F0] p-6 md:p-8 sketch-border sketch-shadow-coral relative overflow-hidden text-[#1F4056]">
+                
+                <!-- Διακοσμητικά Γρανάζια & Αστέρια (Animated Gears & Stars) -->
+                <div class="absolute top-4 left-4 flex gap-2 opacity-80 z-10">
+                    <svg class="w-8 h-8 text-[#1F4056] animate-[spin_12s_linear_infinite]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M16.26 16.26l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke-linecap="round"/>
+                        <circle cx="12" cy="12" r="4" />
+                    </svg>
+                    <svg class="w-6 h-6 text-[#DFAB54] animate-[spin_8s_linear_infinite_reverse]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M16.26 16.26l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke-linecap="round"/>
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </div>
+                <div class="absolute top-4 right-4 text-[#DFAB54] text-2xl animate-bounce">⭐</div>
+
+                <!-- Κεντρική Κορδέλα Τίτλου -->
+                <div class="text-center mb-10 relative">
+                    <div class="inline-block bg-[#1F4056] text-white font-bold px-6 py-3 sketch-border-sm sketch-shadow-coral rotate-[-0.5deg]">
+                        <h3 class="text-lg md:text-xl font-extrabold uppercase tracking-wide">
+                            Στατιστικά για τη χρησιμότητα του θεατρικού παιχνιδιού στην εκπαίδευση
+                        </h3>
                     </div>
-                    <!-- Accessible Alternative Table for Screen Readers -->
-                    <div id="benefitsTable" class="hidden p-4 bg-white rounded-lg border border-slate-200 mt-4">
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                    
+                    <!-- Κάρτα 1: Ενίσχυση Επικοινωνίας (88%) -->
+                    <div class="lg:col-span-4 bg-white p-6 sketch-border-sm sketch-shadow-teal flex flex-col justify-between items-center text-center transition-all hover:scale-[1.02]">
+                        <div>
+                            <h4 class="font-extrabold text-lg text-[#1F4056] mb-4 uppercase tracking-tight">
+                                Ενίσχυση Επικοινωνίας
+                            </h4>
+                            <!-- Interactive Donut Circle -->
+                            <div class="relative w-40 h-40 mx-auto my-4 flex items-center justify-center">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <path class="text-slate-100" stroke="currentColor" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="text-[#E77C61]" stroke-dasharray="88, 100" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <div class="absolute text-3xl font-black text-[#E77C61]">88%</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 w-full">
+                            <div class="flex justify-center gap-2 mb-3 text-2xl">
+                                <span>🗣️</span><span class="animate-pulse">📢</span><span>💬</span>
+                            </div>
+                            <p class="text-xs text-slate-600 font-semibold italic">
+                                Βελτίωση προφορικού λόγου, εκφραστικότητας και μείωση της κοινωνικής συστολής.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Κάρτα 2: Κοινωνικές Δεξιότητες (75%) -->
+                    <div class="lg:col-span-4 bg-white p-6 sketch-border-sm sketch-shadow-coral flex flex-col justify-between items-center text-center transition-all hover:scale-[1.02]">
+                        <div>
+                            <h4 class="font-extrabold text-lg text-[#1F4056] mb-4 uppercase tracking-tight">
+                                Κοινωνικές Δεξιότητες
+                            </h4>
+                            <!-- Interactive Radial Circle -->
+                            <div class="relative w-40 h-40 mx-auto my-4 flex items-center justify-center">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <path class="text-slate-100" stroke="currentColor" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="text-[#1F4056]" stroke-dasharray="75, 100" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <div class="absolute text-3xl font-black text-[#1F4056]">75%</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 w-full">
+                            <div class="flex justify-center gap-2 mb-3 text-2xl">
+                                <span>🤝</span><span>🧑‍🤝‍🧑</span><span>🪜</span>
+                            </div>
+                            <p class="text-xs text-slate-600 font-semibold italic">
+                                Συνεργασία, ομαδικότητα, συμπερίληψη και ομαλή ένταξη στη σχολική κοινότητα.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Κάρτα 3: Κριτική Σκέψη & Συναισθηματική Ανάπτυξη -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
+                        <!-- Υποκάρτα: Κριτική Σκέψη -->
+                        <div class="bg-white p-4 sketch-border-sm sketch-shadow-gold flex items-center gap-4 transition-all hover:scale-[1.02]">
+                            <div class="text-4xl">💡</div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="font-bold text-sm text-[#1F4056] uppercase">Κριτική Σκέψη</span>
+                                    <span class="font-black text-lg text-[#DFAB54]">62%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-3 rounded-full mt-1 overflow-hidden border border-[#1F4056]">
+                                    <div class="bg-[#DFAB54] h-full rounded-full" style="width: 62%"></div>
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-1 italic">Λήψη πρωτοβουλιών & επίλυση προβλημάτων</p>
+                            </div>
+                        </div>
+
+                        <!-- Υποκάρτα: Συναισθηματική Νοημοσύνη -->
+                        <div class="bg-white p-4 sketch-border-sm sketch-shadow-teal flex items-center gap-4 transition-all hover:scale-[1.02]">
+                            <div class="text-4xl">🎭</div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="font-bold text-sm text-[#1F4056] uppercase">Συναισθηματική Νοημοσύνη</span>
+                                    <span class="font-black text-lg text-[#E77C61]">81%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-3 rounded-full mt-1 overflow-hidden border border-[#1F4056]">
+                                    <div class="bg-[#E77C61] h-full rounded-full" style="width: 81%"></div>
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-1 italic">Επαφή με τα συναισθήματα & ενσυναίσθηση</p>
+                            </div>
+                        </div>
+
+                        <!-- Υποκάρτα: Μακροπρόθεσμα Οφέλη -->
+                        <div class="bg-white p-4 sketch-border-sm sketch-shadow-coral flex flex-col justify-center">
+                            <span class="font-bold text-xs text-[#1F4056] uppercase mb-2 block text-center">Μακροπρόθεσμα Οφέλη</span>
+                            <div class="space-y-2 text-[10px] font-bold">
+                                <div>
+                                    <div class="flex justify-between mb-0.5"><span>Αυτοεκτίμηση</span><span>70%</span></div>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full border border-slate-300">
+                                        <div class="bg-[#1F4056] h-full rounded-full" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-0.5"><span>Δημιουργικότητα</span><span>90%</span></div>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full border border-slate-300">
+                                        <div class="bg-[#E77C61] h-full rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-0.5"><span>Σχολική Επίδοση</span><span>55%</span></div>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full border border-slate-300">
+                                        <div class="bg-[#DFAB54] h-full rounded-full" style="width: 55%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Κάτω Κορδέλα/Σκηνή με Μήνυμα -->
+                <div class="mt-10 border-t-2 border-dashed border-[#1F4056] pt-6 text-center">
+                    <div class="inline-block bg-[#DFAB54] text-[#1F4056] font-bold px-4 py-2 sketch-border-sm rotate-[0.5deg] text-xs md:text-sm">
+                        ✨ ΜΕΣΩ ΤΗΣ ΒΙΩΜΑΤΙΚΗΣ ΜΑΘΗΣΗΣ, ΤΟ ΘΕΑΤΡΙΚΟ ΠΑΙΧΝΙΔΙ ΔΗΜΙΟΥΡΓΕΙ ΟΛΟΚΛΗΡΩΜΕΝΕΣ ΠΡΟΣΩΠΙΚΟΤΗΤΕΣ ✨
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Διαδραστικά Στατιστικά (Interactive Charts) με το ίδιο Art-Style -->
+        <div id="charts-wrapper" class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="card-sketch p-6 sketch-border sketch-shadow-teal">
+                <h3 class="text-xl font-bold mb-6 text-center text-[#1F4056]">Κυριότερα Οφέλη για τον Μαθητή (%)</h3>
+                <div class="chart-container">
+                    <canvas id="benefitsChart" aria-label="Κυκλικό γράφημα οφελών" role="img" aria-describedby="benefitsChartDesc"></canvas>
+                    <div id="benefitsChartDesc" class="sr-only">
+                        66.5% Επικοινωνιακό Επίπεδο, 20.5% Συναισθηματική Ανάπτυξη, 13% Άλλα Οφέλη.
+                    </div>
+                    <!-- Προσβάσιμος Πίνακας για Screen Readers -->
+                    <div id="benefitsTable" class="hidden p-4 bg-white rounded-lg border-2 border-[#1F4056] mt-4">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="bg-slate-100">
-                                    <th class="p-2 font-bold">Παιδαγωγικός Τομέας</th>
-                                    <th class="p-2 font-bold">Ποσοστό (%)</th>
+                                    <th class="p-2 font-bold border-b-2 border-[#1F4056]">Τομέας</th>
+                                    <th class="p-2 font-bold border-b-2 border-[#1F4056]">Ποσοστό (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -228,29 +424,27 @@
                         </table>
                     </div>
                 </div>
-                <p class="mt-8 text-sm text-slate-500 italic text-center">
-                    Το 66.5% των εκπαιδευτικών εστιάζει στη βελτίωση της επικοινωνίας και του λόγου.
-                </p>
             </div>
-            <div class="card p-8">
-                <h3 class="text-xl font-bold mb-6 text-center text-[#7077A1]">Επίδραση στο Κλίμα της Τάξης</h3>
+
+            <div class="card-sketch p-6 sketch-border sketch-shadow-coral">
+                <h3 class="text-xl font-bold mb-6 text-center text-[#1F4056]">Επίδραση στο Κλίμα της Τάξης (%)</h3>
                 <div class="chart-container">
-                    <canvas id="classroomChart" aria-label="Ραβδόγραμμα επίδρασης στο κλίμα της τάξης" role="img" aria-describedby="classroomChartDesc"></canvas>
+                    <canvas id="classroomChart" aria-label="Ραβδόγραμμα επίδρασης" role="img" aria-describedby="classroomChartDesc"></canvas>
                     <div id="classroomChartDesc" class="sr-only">
-                        Αυτό το οριζόντιο ραβδόγραμμα δείχνει την επίδραση του θεατρικού παιχνιδιού στο κλίμα της τάξης: Κοινωνική Αλληλεπίδραση 44.3%, Ανάπτυξη Αισθήσεων 19.3%, και Συναισθηματική Ωριμότητα 19.3%.
+                        Κοινωνική Αλληλεπίδραση 44.3%, Ανάπτυξη Αισθήσεων 19.3%, Συναισθηματική Ωριμότητα 19.3%.
                     </div>
-                    <!-- Accessible Alternative Table for Screen Readers -->
-                    <div id="classroomTable" class="hidden p-4 bg-white rounded-lg border border-slate-200 mt-4">
+                    <!-- Προσβάσιμος Πίνακας για Screen Readers -->
+                    <div id="classroomTable" class="hidden p-4 bg-white rounded-lg border-2 border-[#1F4056] mt-4">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="bg-slate-100">
-                                    <th class="p-2 font-bold">Τομέας Επίδρασης</th>
-                                    <th class="p-2 font-bold">Ποσοστό (%)</th>
+                                    <th class="p-2 font-bold border-b-2 border-[#1F4056]">Τομέας Επίδρασης</th>
+                                    <th class="p-2 font-bold border-b-2 border-[#1F4056]">Ποσοστό (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b">
-                                    <td class="p-2">Κοινωνική Αλληλεπίδραση (Κλίμα & συνεργασία)</td>
+                                    <td class="p-2">Κοινωνική Αλληλεπίδραση (Συνεργασία & κλίμα)</td>
                                     <td class="p-2">44.3%</td>
                                 </tr>
                                 <tr class="border-b">
@@ -265,102 +459,127 @@
                         </table>
                     </div>
                 </div>
-                <p class="mt-8 text-sm text-slate-500 italic text-center">
-                    Η κοινωνική αλληλεπίδραση (44.3%) είναι ο βασικός παράγοντας για μια αρμονική ομάδα.
-                </p>
             </div>
         </div>
     </section>
 
+    <!-- Ενότητα: Στέλλα Αξιώτη -->
     <section id="stella" class="mb-24">
-        <div class="flex flex-col md:flex-row gap-12">
-            <div class="md:w-1/3">
-                <div class="sticky top-24">
-                    <h2 class="text-3xl font-black text-[#2D3250] mb-6">Στέλλα Αξιώτη</h2>
-                    <p class="text-indigo-600 font-bold mb-4">Εμψυχώτρια Θεατρικού Παιχνιδιού</p>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        Πτυχιούχος Προσχολικής Αγωγής (Α.Τ.Ε.Ι.) και ειδικευμένη στην Εμψύχωση Ομάδων (ANIMA), η Στέλλα συνδυάζει την παιδαγωγική επιστήμη με την καλλιτεχνική πράξη.
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Αριστερή Στήλη: Παρουσίαση & Δεξιότητες -->
+            <div class="lg:w-1/3 space-y-6">
+                <div class="sticky top-24 bg-white p-8 sketch-border sketch-shadow-gold">
+                    <h2 class="text-3xl font-black text-[#1F4056] mb-2">Στέλλα Αξιώτη</h2>
+                    <p class="text-[#E77C61] font-bold text-lg mb-4">Εμψυχώτρια Θεατρικού Παιχνιδιού</p>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                        Πτυχιούχος Προσχολικής Αγωγής (Α.Τ.Ε.Ι. Αθηνών) και ειδικευμένη στην Εμψύχωση Ομάδων (ANIMA), η Στέλλα συνδέει την επιστημονική γνώση με την καλλιτεχνική πράξη όπως περιγράφεται στο έγγραφο <strong class="text-[#1F4056]">«STELLA CV August 2025»</strong>.
                     </p>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3 text-slate-700">
-                            <span class="bg-[#00ADB5] w-2 h-2 rounded-full"></span>
-                            <span>Δραματοποίηση Παραμυθιού</span>
+                    
+                    <h3 class="font-bold text-base text-[#1F4056] border-b-2 border-[#1F4056] pb-2 mb-4">Εξειδίκευση</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-sm text-[#1F4056] font-medium">
+                            <span class="text-base">✨</span> <span>Δραματοποίηση Παραμυθιού</span>
                         </div>
-                        <div class="flex items-center space-x-3 text-slate-700">
-                            <span class="bg-[#00ADB5] w-2 h-2 rounded-full"></span>
-                            <span>Μουσικοκινητική Αγωγή</span>
+                        <div class="flex items-center gap-2 text-sm text-[#1F4056] font-medium">
+                            <span class="text-base">🎵</span> <span>Μουσικοκινητική Αγωγή</span>
                         </div>
-                        <div class="flex items-center space-x-3 text-slate-700">
-                            <span class="bg-[#00ADB5] w-2 h-2 rounded-full"></span>
-                            <span>Αισθητηριακή Αγωγή (Sensory Play)</span>
+                        <div class="flex items-center gap-2 text-sm text-[#1F4056] font-medium">
+                            <span class="text-base">🖐️</span> <span>Αισθητηριακή Αγωγή (Sensory Play)</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-[#1F4056] font-medium">
+                            <span class="text-base">🕶️</span> <span>Μαύρο Θέατρο στην Εκπαίδευση</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="md:w-2/3">
-                <h3 class="text-2xl font-bold text-[#2D3250] mb-8 border-b-2 border-[#F6B17A] pb-2 inline-block">Επαγγελματική Διαδρομή</h3>
-                <div class="timeline-line ml-4 pl-8 space-y-12">
-                    <div class="relative timeline-item">
-                        <span class="text-sm font-bold text-[#F6B17A]">2023 - 2025</span>
-                        <h4 class="text-lg font-bold text-[#2D3250]">Εκπαιδευτήρια Καίσαρη</h4>
-                        <p class="text-slate-500">Εμψυχώτρια & Υπεύθυνη Σχολικών Εορτών. Εφαρμογή της μεθόδου σε περιβάλλοντα υψηλών απαιτήσεων.</p>
+
+            <!-- Δεξιά Στήλη: Χρονολόγιο Επαγγελματικής Κατάρτισης -->
+            <div class="lg:w-2/3">
+                <h3 class="text-2xl font-bold text-[#1F4056] mb-8 border-b-4 border-[#DFAB54] pb-2 inline-block">Επαγγελματική Διαδρομή</h3>
+                
+                <div class="relative pl-6 border-l-4 border-dashed border-[#1F4056] space-y-8">
+                    <!-- Item 1 -->
+                    <div class="relative">
+                        <span class="absolute -left-[34px] top-1.5 bg-[#E77C61] w-4 h-4 rounded-full border-2 border-[#1F4056]"></span>
+                        <span class="text-xs font-bold text-[#E77C61] bg-[#FAF6F0] px-2 py-0.5 border border-[#E77C61] rounded-full">2023 - 2025</span>
+                        <h4 class="text-lg font-bold text-[#1F4056] mt-2">Εκπαιδευτήρια Καίσαρη</h4>
+                        <p class="text-sm text-slate-600 mt-1">Εμψυχώτρια Θεατρικού Παιχνιδιού & Υπεύθυνη Σχολικών Εορτών. Σχεδιασμός και υλοποίηση δράσεων σε περιβάλλον υψηλών απαιτήσεων.</p>
                     </div>
-                    <div class="relative timeline-item">
-                        <span class="text-sm font-bold text-[#F6B17A]">2023 - 2025</span>
-                        <h4 class="text-lg font-bold text-[#2D3250]">Act and Play</h4>
-                        <p class="text-slate-500">Υπεύθυνη εμψύχωσης θεατρικού παιχνιδιού και σχεδιασμός προγραμμάτων.</p>
+
+                    <!-- Item 2 -->
+                    <div class="relative">
+                        <span class="absolute -left-[34px] top-1.5 bg-[#DFAB54] w-4 h-4 rounded-full border-2 border-[#1F4056]"></span>
+                        <span class="text-xs font-bold text-[#DFAB54] bg-[#FAF6F0] px-2 py-0.5 border border-[#DFAB54] rounded-full">2023 - 2025</span>
+                        <h4 class="text-lg font-bold text-[#1F4056] mt-2">Act and Play</h4>
+                        <p class="text-sm text-slate-600 mt-1">Υπεύθυνη σχεδιασμού προγραμμάτων θεατρικής αγωγής και εμψύχωσης ομάδων.</p>
                     </div>
-                    <div class="relative timeline-item">
-                        <span class="text-sm font-bold text-[#F6B17A]">2021 - 2023</span>
-                        <h4 class="text-lg font-bold text-[#2D3250]">Παιδικός Σταθμός "Κουκούτσι"</h4>
-                        <p class="text-slate-500">Παιδαγωγός και Εμψυχώτρια, εστιάζοντας στην ολιστική ανάπτυξη νηπίων.</p>
+
+                    <!-- Item 3 -->
+                    <div class="relative">
+                        <span class="absolute -left-[34px] top-1.5 bg-[#1F4056] w-4 h-4 rounded-full border-2 border-white"></span>
+                        <span class="text-xs font-bold text-[#1F4056] bg-[#FAF6F0] px-2 py-0.5 border border-[#1F4056] rounded-full">2021 - 2023</span>
+                        <h4 class="text-lg font-bold text-[#1F4056] mt-2">Παιδικός Σταθμός "Κουκούτσι"</h4>
+                        <p class="text-sm text-slate-600 mt-1">Παιδαγωγός και εμψυχώτρια, με έμφαση στην ολιστική ανάπτυξη και κοινωνικοποίηση νηπίων.</p>
                     </div>
-                    <div class="relative timeline-item">
-                        <span class="text-sm font-bold text-[#F6B17A]">Εξειδίκευση</span>
-                        <h4 class="text-lg font-bold text-[#2D3250]">Improv Comedy & Μαύρο Θέατρο</h4>
-                        <p class="text-slate-500">Εργαλεία αυθορμητισμού και ατμοσφαιρικής διδασκαλίας που μαγεύουν τα παιδιά.</p>
+
+                    <!-- Item 4 -->
+                    <div class="relative">
+                        <span class="absolute -left-[34px] top-1.5 bg-[#E77C61] w-4 h-4 rounded-full border-2 border-[#1F4056]"></span>
+                        <span class="text-xs font-bold text-[#E77C61] bg-[#FAF6F0] px-2 py-0.5 border border-[#E77C61] rounded-full">Συνεχής Επιμόρφωση</span>
+                        <h4 class="text-lg font-bold text-[#1F4056] mt-2">Improv Comedy & Μαύρο Θέατρο</h4>
+                        <p class="text-sm text-slate-600 mt-1">Εργαστήρια στην ANIMA και IMPROVIBE. Εξειδικευμένα εργαλεία αυθορμητισμού και ατμοσφαιρικής διδασκαλίας που μαγεύουν τα παιδιά.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="training" class="bg-[#2D3250] text-white rounded-[3rem] p-12 overflow-hidden relative">
+    <!-- Πρόταση Κατάρτισης -->
+    <section id="training" class="bg-[#1F4056] text-white p-8 md:p-12 sketch-border sketch-shadow-coral relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-[#E77C61] rounded-full opacity-20"></div>
+        
         <div class="relative z-10 max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl font-black mb-8">Η Πρόταση Κατάρτισης για τη Δομή σας</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                <div class="p-6 bg-[#424769] rounded-2xl">
-                    <h4 class="font-bold text-[#F6B17A] mb-4">Επιμόρφωση Προσωπικού</h4>
-                    <p class="text-sm text-slate-200">Μεταφορά τεχνογνωσίας για την ένταξη του θεατρικού παιχνιδιού στο καθημερινό πρόγραμμα (διαχείριση συγκρούσεων, συναισθήματα).</p>
+            <h2 class="text-3xl font-black mb-6">Η Πρόταση Κατάρτισης για τη Δομή σας</h2>
+            <p class="text-[#FAF6F0] text-sm md:text-base max-w-2xl mx-auto mb-8">
+                Η Στέλλα Αξιώτη μεταφέρει την τεχνογνωσία της στο προσωπικό σας, βοηθώντας στην ομαλή και επιστημονικά τεκμηριωμένη ένταξη του θεατρικού παιχνιδιού στο αναλυτικό σας πρόγραμμα.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                <div class="p-6 bg-white/10 rounded-xl border border-white/20 hover:bg-white/15 transition-all">
+                    <h4 class="font-bold text-[#DFAB54] mb-2">🎯 Επιμόρφωση & Εργαλεία</h4>
+                    <p class="text-sm text-slate-200">Σχεδιασμός βιωματικών εργαστηρίων για τους εκπαιδευτικούς σας, εστιάζοντας στη διαχείριση συναισθημάτων και την επίλυση συγκρούσεων στην τάξη.</p>
                 </div>
-                <div class="p-6 bg-[#424769] rounded-2xl">
-                    <h4 class="font-bold text-[#F6B17A] mb-4">Συμπεριληπτική Προσέγγιση</h4>
-                    <p class="text-sm text-slate-200">Εξειδικευμένη υποστήριξη για παιδιά με ειδικές ανάγκες (όπως σύνδρομο Asperger) και ενίσχυση συναισθηματικής νοημοσύνης.</p>
+                <div class="p-6 bg-white/10 rounded-xl border border-white/20 hover:bg-white/15 transition-all">
+                    <h4 class="font-bold text-[#E77C61] mb-2">🤝 Συμπεριληπτική Εκπαίδευση</h4>
+                    <p class="text-sm text-slate-200">Προσαρμογή δραστηριοτήτων για παιδιά με ειδικές εκπαιδευτικές ανάγκες (π.χ. Σύνδρομο Asperger) και ενίσχυση της συναισθηματικής νοημοσύνης.</p>
                 </div>
             </div>
-            <div class="mt-12 bg-[#F6B17A] text-[#2D3250] p-8 rounded-3xl">
-                <h3 class="text-2xl font-black mb-2">Γιατί η Στέλλα;</h3>
-                <p class="font-semibold italic">Συνδυάζει τη βαθιά γνώση της εξελικτικής ψυχολογίας με την πρακτική εμπειρία στην εμψύχωση ομάδων, προσφέροντας ασφάλεια (Πιστοποίηση Α' Βοηθειών) και επαγγελματισμό.</p>
+
+            <div class="mt-8 bg-[#FAF6F0] text-[#1F4056] p-6 sketch-border-sm sketch-shadow-gold max-w-2xl mx-auto">
+                <h4 class="font-bold text-lg mb-2">Γιατί να επιλέξετε τη Στέλλα;</h4>
+                <p class="text-sm font-medium italic">
+                    Διαθέτει πιστοποίηση Α' Βοηθειών, άριστη οργανωτική ικανότητα και το απαραίτητο επιστημονικό υπόβαθρο για να εγγυηθεί ένα ασφαλές και εξελιγμένο εκπαιδευτικό περιβάλλον.
+                </p>
             </div>
         </div>
     </section>
 
 </main>
 
-<footer id="contact" class="bg-[#2D3250] text-[#7077A1] py-16 px-6 text-center border-t border-[#424769]">
+<footer id="contact" class="bg-[#1F4056] text-white py-12 px-6 text-center border-t-8 border-[#E77C61]">
     <div class="max-w-4xl mx-auto">
-        <h2 class="text-white text-3xl font-black mb-6">Ας φέρουμε την εξέλιξη μαζί</h2>
-        <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-12">
-            <div class="flex items-center space-x-2">
-                <span class="text-white" aria-hidden="true">📧</span>
-                <span class="font-bold"><a href="mailto:stelaax@hotmail.gr" class="hover:underline focus:ring-2 focus:ring-[#F6B17A] p-1 rounded">stelaax@hotmail.gr</a></span>
+        <h2 class="text-2xl md:text-3xl font-black mb-4 text-[#FAF6F0]">Ας φέρουμε την εξέλιξη μαζί!</h2>
+        <div class="flex flex-col md:flex-row justify-center items-center gap-6 mb-8 text-sm md:text-base">
+            <div class="flex items-center gap-2">
+                <span>📧</span>
+                <a href="mailto:stelaax@hotmail.gr" class="hover:underline font-bold text-[#DFAB54]">stelaax@hotmail.gr</a>
             </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-white" aria-hidden="true">📞</span>
-                <span class="font-bold"><a href="tel:6980961826" class="hover:underline focus:ring-2 focus:ring-[#F6B17A] p-1 rounded">6980961826</a></span>
+            <div class="flex items-center gap-2">
+                <span>📞</span>
+                <a href="tel:6980961826" class="hover:underline font-bold text-[#E77C61]">6980961826</a>
             </div>
         </div>
-        <p class="text-sm uppercase tracking-widest">&copy; 2025 STELLA AXIOTI | Educational Drama Consultant</p>
+        <p class="text-xs text-slate-400 uppercase tracking-widest">&copy; 2026 STELLA AXIOTI | Educational Drama Consultant</p>
     </div>
 </footer>
 
@@ -419,7 +638,7 @@
         }
     }
 
-    // Utility for label wrapping (max 16 chars)
+    // Label wrapping helper
     function wrapLabel(text) {
         if (text.length <= 16) return text;
         const words = text.split(' ');
@@ -437,22 +656,18 @@
         return lines;
     }
 
-    // Chart.js Tooltip Fix for Arrays
+    // Chart.js Configuration matching the image art style colors
     const sharedTooltipOptions = {
         callbacks: {
             title: function(tooltipItems) {
                 const item = tooltipItems[0];
                 let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
-                } else {
-                    return label;
-                }
+                return Array.isArray(label) ? label.join(' ') : label;
             }
         }
     };
 
-    // Chart 1: Benefits Donut
+    // Chart 1: Benefits Donut (Teal & Coral matching the style)
     const ctx1 = document.getElementById('benefitsChart').getContext('2d');
     new Chart(ctx1, {
         type: 'doughnut',
@@ -460,22 +675,31 @@
             labels: [wrapLabel('Επικοινωνιακό Επίπεδο'), wrapLabel('Συναισθηματική Ανάπτυξη')],
             datasets: [{
                 data: [66.5, 20.5],
-                backgroundColor: ['#00ADB5', '#F6B17A'],
-                borderWidth: 0,
-                hoverOffset: 10
+                backgroundColor: ['#1F4056', '#E77C61'],
+                borderColor: '#FAF6F0',
+                borderWidth: 3,
+                hoverOffset: 12
             }]
         },
         options: {
             maintainAspectRatio: false,
-            cutout: '70%',
+            cutout: '65%',
             plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20 } },
+                legend: { 
+                    position: 'bottom', 
+                    labels: { 
+                        font: { family: 'Fredoka', size: 12, weight: 'bold' },
+                        color: '#1F4056',
+                        boxWidth: 15, 
+                        padding: 15 
+                    } 
+                },
                 tooltip: sharedTooltipOptions
             }
         }
     });
 
-    // Chart 2: Classroom Impact Bar
+    // Chart 2: Classroom Impact Bar (Teal, Blue-Gray, Gold matching the palette)
     const ctx2 = document.getElementById('classroomChart').getContext('2d');
     new Chart(ctx2, {
         type: 'bar',
@@ -487,17 +711,32 @@
             ],
             datasets: [{
                 data: [44.3, 19.3, 19.3],
-                backgroundColor: ['#2D3250', '#7077A1', '#7077A1'],
-                borderRadius: 10,
-                barThickness: 30
+                backgroundColor: ['#1F4056', '#DFAB54', '#E77C61'],
+                borderColor: '#1F4056',
+                borderWidth: 2,
+                borderRadius: 8,
+                barThickness: 24
             }]
         },
         options: {
             indexAxis: 'y',
             maintainAspectRatio: false,
             scales: {
-                x: { beginAtZero: true, max: 50, ticks: { callback: v => v + '%' } },
-                y: { grid: { display: false } }
+                x: { 
+                    beginAtZero: true, 
+                    max: 50, 
+                    ticks: { 
+                        callback: v => v + '%',
+                        font: { family: 'Fredoka', size: 10 }
+                    } 
+                },
+                y: { 
+                    grid: { display: false },
+                    ticks: {
+                        font: { family: 'Fredoka', size: 11, weight: 'bold' },
+                        color: '#1F4056'
+                    }
+                }
             },
             plugins: {
                 legend: { display: false },
